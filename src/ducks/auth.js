@@ -1,10 +1,11 @@
 import firebase from 'firebase';
 import { appName } from '../config';
-import { Record } from 'immutable';
+import { Record, List } from 'immutable';
 import { SubmissionError } from 'redux-form';
 
 const ReducerRecord = Record({
   user: null,
+  people: new List(),
   error: null,
   loading: false,
 });
@@ -15,6 +16,10 @@ export const SIGN_UP_SUCCESS = `${appName}/${moduleName}/SIGN_UP_SUCCESS`;
 export const SIGN_UP_ERROR = `${appName}/${moduleName}/SIGN_UP_ERROR`;
 
 export const SIGN_IN_SUCCESS = `${appName}/${moduleName}/SIGN_IN_SUCCESS`;
+
+export const ADD_PERSON = `${appName}/${moduleName}/ADD_PERSON`;
+
+
 
 const reducer = (state = new ReducerRecord(), action) => {
   const { type, payload, error } = action;
@@ -31,6 +36,9 @@ const reducer = (state = new ReducerRecord(), action) => {
 
     case SIGN_UP_ERROR:
       return state.set('loading', false).set('error', error);
+
+    case ADD_PERSON:
+      return state.update('people', (people) => people.set(state.people.size, payload))
 
     default:
       return state;
@@ -61,6 +69,13 @@ export const signUp = (email, password) => {
     }
   };
 };
+
+export const addPerson = person => {
+  return {
+    type: ADD_PERSON,
+    payload: person,
+  }
+}
 // firebase.auth().onAuthStateChanged(user => {
 // const store = require('../redux').default;
 // store.dispatch({

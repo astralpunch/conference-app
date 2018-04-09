@@ -7,7 +7,7 @@ const ErrorField = props => {
 
   return (
     <div>
-      <label>{input.name}</label>
+      <label>{props.label}</label>
       <input {...input} type={type} />
       {errorText}
     </div>

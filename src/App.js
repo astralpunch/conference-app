@@ -11,11 +11,11 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        {/* <ConnectedRouter history={history}> */}
-        <BrowserRouter>
-          <Root />
-        </BrowserRouter>
-        {/* </ConnectedRouter> */}
+        <ConnectedRouter history={history}>
+          <BrowserRouter>
+            <Root />
+          </BrowserRouter>
+        </ConnectedRouter>
       </Provider>
     );
   }
