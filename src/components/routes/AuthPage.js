@@ -21,15 +21,11 @@ class AuthPage extends Component {
         </NavLink>
         <Route
           path="/auth/signin"
-          render={() => (
-            <SignInForm error={error} onSubmit={this.handleSignIn} />
-          )}
+          render={() => <SignInForm error={error} onSubmit={this.handleSignIn} />}
         />
         <Route
           path="/auth/signup"
-          render={() => (
-            <SignUpForm error={error} onSubmit={this.handleSignUp} />
-          )}
+          render={() => <SignUpForm error={error} onSubmit={this.handleSignUp} />}
         />
         {loading && <Loader />}
       </div>
@@ -40,12 +36,13 @@ class AuthPage extends Component {
   handleSignUp = ({ email, password }) => {
     const { signUp } = this.props;
 
-    return signUp(email, password).then(
-      res => res,
-      error => {
-        throw new SubmissionError({ _error: error.message });
-      },
-    );
+    return signUp(email, password);
+    // .then(
+    //   res => res,
+    //   error => {
+    //     throw new SubmissionError({ _error: error.message });
+    //   },
+    // );
   };
 }
 

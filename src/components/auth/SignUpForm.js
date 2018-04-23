@@ -6,8 +6,6 @@ import ErrorField from '../common/ErrorField';
 class SignUpForm extends Component {
   render() {
     const { handleSubmit, submitFailed, error } = this.props;
-    console.log(this.props);
-    console.log(submitFailed);
 
     return (
       <div>
