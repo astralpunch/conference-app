@@ -12,11 +12,7 @@ class ProtectedRoute extends Component {
 
   renderProtected = routeProps => {
     const { component: ProtectedComponent, authorized } = this.props;
-    return authorized ? (
-      <ProtectedComponent {...routeProps} />
-    ) : (
-      <UnAuthorized />
-    );
+    return authorized ? <ProtectedComponent {...routeProps} /> : <UnAuthorized />;
   };
 }
 

@@ -43,7 +43,6 @@ export const addPerson = person => {
 
 export const addPersonSaga = function*(action) {
   const id = yield call(generateId);
-  console.log(id);
   yield put({
     type: ADD_PERSON,
     payload: { ...action.payload, id },
@@ -53,12 +52,3 @@ export const addPersonSaga = function*(action) {
 export const saga = function*() {
   yield takeEvery(ADD_PERSON_REQUEST, addPersonSaga);
 };
-
-// export const addPerson = person => {
-//   return (dispatch) => dispatch({
-//     type: ADD_PERSON,
-//     payload: {
-//       id: Date.now(), ...person,
-//     }
-//   })
-// }
