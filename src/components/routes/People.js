@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { SubmissionError } from 'redux-form';
-import { Route } from 'react-router-dom';
+// import { SubmissionError } from 'redux-form';
+// import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import AddPersonForm from '../people/AddPersonForm'
+import AddPersonForm from '../people/AddPersonForm';
 
-import { addPerson, moduleName } from '../../ducks/people';
+import { addPerson } from '../../ducks/people';
 
 class People extends Component {
   render() {

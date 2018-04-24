@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import { SubmissionError } from 'redux-form';
 import SignInForm from '../auth/SignInForm';
 import SignUpForm from '../auth/SignUpForm';
-import { Route, NavLink, Switch, withRouter } from 'react-router-dom';
+import { Route, NavLink, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signUp, signIn, moduleName } from '../../ducks/auth';
 import Loader from '../common/Loader';

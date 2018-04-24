@@ -1,7 +1,9 @@
 import firebase from 'firebase';
 import { call, put, take } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 
-import {
+import reducer, {
+  ReducerRecord,
   // signUp
   signUpSaga,
   SIGN_UP_REQUEST,
@@ -14,7 +16,6 @@ import {
   SIGN_IN_ERROR,
   // signOut
   signOutSaga,
-  SIGN_OUT_REQUEST,
   SIGN_OUT_SUCCESS,
 } from './auth';
 
@@ -111,4 +112,30 @@ it('should sign out', () => {
       type: SIGN_OUT_SUCCESS,
     }),
   );
+  expect(put(push('/auth/signin')));
+});
+
+it('should sign out', () => {
+  const state = new ReducerRecord({
+    user: {},
+  });
+
+  const newState = reducer(state, { type: SIGN_OUT_SUCCESS });
+
+  expect(newState).toEqual(new ReducerRecord());
+});
+
+it('should sign in', () => {
+  const state = new ReducerRecord();
+  const user = {
+    email: 'lala@example.com',
+    uid: Math.random().toString(),
+  };
+
+  const newState = reducer(state, {
+    type: SIGN_IN_SUCCESS,
+    payload: { user },
+  });
+
+  expect(newState).toEqual(new ReducerRecord({ user }));
 });

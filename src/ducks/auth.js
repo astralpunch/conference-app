@@ -4,7 +4,7 @@ import { Record } from 'immutable';
 import { all, cps, call, put, take, takeEvery } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
-const ReducerRecord = Record({
+export const ReducerRecord = Record({
   user: null,
   error: null,
   loading: false,
