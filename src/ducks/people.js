@@ -1,4 +1,3 @@
-import firebase from 'firebase';
 import { appName } from '../config';
 import { Record, List } from 'immutable';
 import { put, call, takeEvery } from 'redux-saga/effects';
@@ -20,6 +19,7 @@ export const moduleName = 'people';
 const prefix = `${appName}/${moduleName}`;
 export const ADD_PERSON_REQUEST = `${prefix}/ADD_PERSON_REQUEST`;
 export const ADD_PERSON = `${prefix}/ADD_PERSON`;
+export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`;
 
 export default (state = new ReducerRecord(), action) => {
   const { type, payload, error } = action;
@@ -46,6 +46,9 @@ export const addPersonSaga = function*(action) {
   yield put({
     type: ADD_PERSON,
     payload: { ...action.payload, id },
+  });
+  yield put({
+    type: ADD_PERSON_SUCCESS,
   });
 };
 

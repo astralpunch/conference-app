@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import ProtectedRoute from './common/ProtectedRoute';
@@ -20,9 +20,13 @@ class Root extends Component {
     return (
       <div>
         {btn}
-        <ProtectedRoute path="/admin" component={AdminPage} />
-        <ProtectedRoute path="/people" component={People} />
-        <Route path="/auth" component={AuthPage} />
+        <Link to="/people">People</Link>
+        <Link to="/admin">Admin page</Link>
+        <Switch>
+          <ProtectedRoute path="/admin" component={AdminPage} />
+          <ProtectedRoute path="/people" component={People} />
+          <Route path="/auth" component={AuthPage} />
+        </Switch>
       </div>
     );
   }

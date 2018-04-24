@@ -29,6 +29,12 @@ export default (state = new ReducerRecord(), action) => {
     case SIGN_UP_REQUEST:
       return state.set('loading', true);
 
+    case SIGN_UP_SUCCESS:
+      return state.set('loading', false);
+
+    case SIGN_UP_ERROR:
+      return state.set('loading', false).set('error', error);
+
     case SIGN_IN_REQUEST:
       return state.set('loading', true);
 
@@ -39,9 +45,6 @@ export default (state = new ReducerRecord(), action) => {
         .set('error', null);
 
     case SIGN_IN_ERROR:
-      return state.set('loading', false).set('error', error);
-
-    case SIGN_UP_ERROR:
       return state.set('loading', false).set('error', error);
 
     case SIGN_OUT_SUCCESS:
@@ -83,10 +86,12 @@ export const signUpSaga = function*() {
         action.payload.email,
         action.payload.password,
       );
+
       yield put({
-        type: SIGN_IN_SUCCESS,
+        type: SIGN_UP_SUCCESS,
         payload: { user },
       });
+      yield put(push('/auth/signin'));
     } catch (error) {
       yield put({
         type: SIGN_UP_ERROR,
@@ -118,19 +123,6 @@ export const signInSaga = function*() {
   }
 };
 
-export const watchStatusChange = function*() {
-  const auth = firebase.auth();
-
-  try {
-    yield cps([auth, auth.onAuthStateChanged]);
-  } catch (user) {
-    yield put({
-      type: SIGN_IN_SUCCESS,
-      payload: { user },
-    });
-  }
-};
-
 export const signOutSaga = function*() {
   const auth = firebase.auth();
 
@@ -150,4 +142,17 @@ export const saga = function*() {
     watchStatusChange(),
     takeEvery(SIGN_OUT_REQUEST, signOutSaga),
   ]);
+};
+
+export const watchStatusChange = function*() {
+  const auth = firebase.auth();
+
+  try {
+    yield cps([auth, auth.onAuthStateChanged]);
+  } catch (user) {
+    yield put({
+      type: SIGN_IN_SUCCESS,
+      payload: { user },
+    });
+  }
 };

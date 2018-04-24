@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import Root from './components/Root';
 import store from './redux';
 import { Provider } from 'react-redux';
@@ -12,9 +11,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <BrowserRouter>
-            <Root />
-          </BrowserRouter>
+          <Root />
         </ConnectedRouter>
       </Provider>
     );
