@@ -5,13 +5,14 @@ import Loader from '../common/Loader';
 
 import { moduleName, fetchAll, eventListSelector } from '../../ducks/events';
 
-class EventList extends Component {
+export class TableEventList extends Component {
   componentDidMount() {
     this.props.fetchAll();
   }
 
   render() {
     if (this.props.loading) return <Loader />;
+
     return (
       <div>
         <table>
@@ -51,4 +52,4 @@ export default connect(
     loading: state[moduleName].loading,
   }),
   { fetchAll },
-)(EventList);
+)(TableEventList);

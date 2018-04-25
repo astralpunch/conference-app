@@ -104,16 +104,19 @@ export const signUpSaga = function*() {
 export const signInSaga = function*() {
   const auth = firebase.auth();
   const action = yield take(SIGN_IN_REQUEST);
+
   try {
     const user = yield call(
       [auth, auth.signInWithEmailAndPassword],
       action.payload.email,
       action.payload.password,
     );
+
     yield put({
       type: SIGN_IN_SUCCESS,
       payload: { user },
     });
+
     yield put(push('/admin'));
   } catch (error) {
     yield put({
@@ -128,20 +131,13 @@ export const signOutSaga = function*() {
 
   try {
     yield call([auth, auth.signOut]);
+
     yield put({
       type: SIGN_OUT_SUCCESS,
     });
+
     yield put(push('/auth/signin'));
   } catch (_) {}
-};
-
-export const saga = function*() {
-  yield all([
-    signUpSaga(),
-    signInSaga(),
-    watchStatusChange(),
-    takeEvery(SIGN_OUT_REQUEST, signOutSaga),
-  ]);
 };
 
 export const watchStatusChange = function*() {
@@ -155,4 +151,13 @@ export const watchStatusChange = function*() {
       payload: { user },
     });
   }
+};
+
+export const saga = function*() {
+  yield all([
+    signUpSaga(),
+    signInSaga(),
+    watchStatusChange(),
+    takeEvery(SIGN_OUT_REQUEST, signOutSaga),
+  ]);
 };

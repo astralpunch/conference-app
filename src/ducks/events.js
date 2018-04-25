@@ -121,7 +121,6 @@ export const fetchLazySaga = function*() {
     const state = yield select(stateSelector);
 
     if (state.loading || state.loaded) continue;
-    //        if (state.loaded) return
 
     yield put({
       type: FETCH_LAZY_START,

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// import { SubmissionError } from 'redux-form';
-// import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import AddPersonForm from '../people/AddPersonForm';
@@ -12,10 +10,23 @@ class People extends Component {
     return (
       <div>
         <h1>People</h1>
-        <AddPersonForm onSubmit={this.props.addPerson} />
+        <AddPersonForm onSubmit={this.submitPerson} />
       </div>
     );
   }
+  // onSubmit: (values) => {
+  //   return new Promise((resolve, reject) => {
+  //     dispatch(someActionCreator({ values, resolve, reject }))
+  //   });
+  // }
+
+  submitPerson = values => {
+    const { addPerson } = this.props;
+
+    return new Promise((resolve, reject) => {
+      addPerson({ values, resolve, reject });
+    });
+  };
 }
 
 export default connect(null, { addPerson })(People);
