@@ -4,8 +4,7 @@ import { createSelector } from 'reselect';
 import { SubmissionError, reset } from 'redux-form';
 import firebase from 'firebase';
 import { fbDatatoEntities } from './utils';
-import { put, call, take, all } from 'redux-saga/effects';
-import { generateId } from './utils';
+import { put, call, take, all, takeEvery } from 'redux-saga/effects';
 
 const ReducerRecord = Record({
   entities: new OrderedMap({}),
@@ -44,6 +43,14 @@ export default (state = new ReducerRecord(), action) => {
         .set('loading', false)
         .set('loaded', true)
         .set('entities', fbDatatoEntities(payload, PersonRecord));
+
+    case ADD_PERSON_REQUEST:
+      return state.set('loading', true);
+
+    case ADD_PERSON_SUCCESS:
+      return state
+        .set('loading', false)
+        .setIn(['entities', payload.uid], new PersonRecord(payload));
 
     default:
       return state;
@@ -90,34 +97,29 @@ export const fetchAllSaga = function*() {
   }
 };
 
-export const addPersonSaga = function*() {
-  while (true) {
-    const uid = yield call(generateId);
+export const addPersonSaga = function*(action) {
+  const {
+    payload: { values, resolve, reject },
+  } = action;
 
-    const {
-      payload: { values, resolve, reject },
-    } = yield take(ADD_PERSON_REQUEST);
+  try {
+    const peopleIdRef = firebase.database().ref('people');
 
-    try {
-      const peopleIdRef = firebase.database().ref(`people/${uid}`);
+    const ref = yield call([peopleIdRef, peopleIdRef.push], values);
 
-      yield call([peopleIdRef, peopleIdRef.set], { ...values, uid });
+    yield put({
+      type: ADD_PERSON_SUCCESS,
+      payload: { uid: ref.key, ...values },
+    });
 
-      yield put({
-        type: ADD_PERSON_SUCCESS,
-      });
+    yield put(reset());
 
-      yield put(reset);
-
-      yield put(fetchAll());
-
-      yield call(resolve);
-    } catch (err) {
-      yield call(reject, new SubmissionError({ _error: 'error' }));
-    }
+    yield call(resolve);
+  } catch (err) {
+    yield call(reject, new SubmissionError({ _error: 'error' }));
   }
 };
 
 export const saga = function*() {
-  yield all([fetchAllSaga(), addPersonSaga()]);
+  yield all([fetchAllSaga(), takeEvery(ADD_PERSON_REQUEST, addPersonSaga)]);
 };
