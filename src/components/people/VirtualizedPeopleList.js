@@ -19,10 +19,11 @@ export class VirtualizedPeopleList extends Component {
         rowHeight={40}
         rowCount={people.length}
         headerHeight={50}
-        overscanRowCount={5}
+        overscanRowCount={2}
         width={700}
         height={300}
         onRowClick={this.handleRowClick}
+        rowClassName="test--people-list__row"
       >
         <Column label="firstName" dataKey="firstName" width={150} />
         <Column label="lastName" dataKey="lastName" width={150} />
@@ -32,11 +33,6 @@ export class VirtualizedPeopleList extends Component {
   }
 
   rowGetter = ({ index }) => this.props.people[index];
-
-  handleRowClick = rowData => {
-    const { selectEvent } = this.props;
-    selectEvent && selectEvent(rowData.uid);
-  };
 }
 
 export default connect(
