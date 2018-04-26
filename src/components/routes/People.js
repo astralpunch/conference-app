@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import AddPersonForm from '../people/AddPersonForm';
 
 import { addPerson } from '../../ducks/people';
+import VirtualizedPeopleList from '../people/VirtualizedPeopleList';
 
 class People extends Component {
   render() {
@@ -11,14 +12,10 @@ class People extends Component {
       <div>
         <h1>People</h1>
         <AddPersonForm onSubmit={this.submitPerson} />
+        <VirtualizedPeopleList />
       </div>
     );
   }
-  // onSubmit: (values) => {
-  //   return new Promise((resolve, reject) => {
-  //     dispatch(someActionCreator({ values, resolve, reject }))
-  //   });
-  // }
 
   submitPerson = values => {
     const { addPerson } = this.props;

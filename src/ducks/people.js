@@ -1,16 +1,20 @@
 import { appName } from '../config';
-import { Record, List } from 'immutable';
+import { Record, OrderedMap } from 'immutable';
+import { createSelector } from 'reselect';
 import { SubmissionError } from 'redux-form';
 import firebase from 'firebase';
-import { put, call, take, takeEvery } from 'redux-saga/effects';
+import { fbDatatoEntities } from './utils';
+import { put, call, take, all } from 'redux-saga/effects';
 import { generateId } from './utils';
 
 const ReducerRecord = Record({
-  people: new List(),
+  entities: new OrderedMap({}),
+  loading: false,
+  loaded: false,
 });
 
 const PersonRecord = Record({
-  id: null,
+  uid: null,
   firstName: null,
   lastName: null,
   email: null,
@@ -23,26 +27,46 @@ export const ADD_PERSON_REQUEST = `${prefix}/ADD_PERSON_REQUEST`;
 export const ADD_PERSON = `${prefix}/ADD_PERSON`;
 export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`;
 
+export const FETCH_ALL_REQUEST = `${prefix}/FETCH_ALL_REQUEST`;
+export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`;
+
 // Reducer
 
 export default (state = new ReducerRecord(), action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case ADD_PERSON: {
-      return state.update('people', people => people.push(new PersonRecord(payload)));
-    }
+    case FETCH_ALL_REQUEST:
+      return state.set('loading', true);
+
+    case FETCH_ALL_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('loaded', true)
+        .set('entities', fbDatatoEntities(payload, PersonRecord));
 
     default:
       return state;
   }
 };
 
+// Selectors
+
+export const stateSelector = state => state[moduleName];
+export const entitiesSelector = createSelector(stateSelector, state => state.entities);
+export const peopleListSelector = createSelector(entitiesSelector, entities =>
+  entities.valueSeq().toArray(),
+);
+
 // Action creators
 
-export const addPerson = person => {
-  console.log(person);
+export const fetchAll = () => {
+  return {
+    type: FETCH_ALL_REQUEST,
+  };
+};
 
+export const addPerson = person => {
   return {
     type: ADD_PERSON_REQUEST,
     payload: person,
@@ -51,35 +75,47 @@ export const addPerson = person => {
 
 // Sagas
 
-// function* saga() {
-//   while (true) {
-//     const {
-//       payload: { values, resolve, reject },
-//     } = yield take(TYPE);
-//     // use resolve() or reject() here
-//   }
-// }
+export const fetchAllSaga = function*() {
+  while (true) {
+    yield take(FETCH_ALL_REQUEST);
 
-export const addPersonSaga = function*(action) {
-  const id = yield call(generateId);
+    const ref = firebase.database().ref('people');
 
-  const {
-    payload: { values, resolve, reject },
-  } = action;
+    const data = yield call([ref, ref.once], 'value');
 
-  try {
-    const peopleIdRef = firebase.database().ref(`people/${id}`);
-
-    yield call([peopleIdRef, peopleIdRef.set], { ...values, id });
     yield put({
-      type: ADD_PERSON_SUCCESS,
+      type: FETCH_ALL_SUCCESS,
+      payload: data.val(),
     });
-    yield call(resolve);
-  } catch (err) {
-    yield call(reject, new SubmissionError({ _error: 'error' }));
+  }
+};
+
+export const addPersonSaga = function*() {
+  while (true) {
+    const uid = yield call(generateId);
+
+    const {
+      payload: { values, resolve, reject },
+    } = yield take(ADD_PERSON_REQUEST);
+
+    try {
+      const peopleIdRef = firebase.database().ref(`people/${uid}`);
+
+      yield call([peopleIdRef, peopleIdRef.set], { ...values, uid });
+
+      yield put({
+        type: ADD_PERSON_SUCCESS,
+      });
+
+      yield put(fetchAll());
+
+      yield call(resolve);
+    } catch (err) {
+      yield call(reject, new SubmissionError({ _error: 'error' }));
+    }
   }
 };
 
 export const saga = function*() {
-  yield takeEvery(ADD_PERSON_REQUEST, addPersonSaga);
+  yield all([fetchAllSaga(), addPersonSaga()]);
 };
