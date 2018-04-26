@@ -1,7 +1,7 @@
 import { appName } from '../config';
 import { Record, OrderedMap } from 'immutable';
 import { createSelector } from 'reselect';
-import { SubmissionError } from 'redux-form';
+import { SubmissionError, reset } from 'redux-form';
 import firebase from 'firebase';
 import { fbDatatoEntities } from './utils';
 import { put, call, take, all } from 'redux-saga/effects';
@@ -106,6 +106,8 @@ export const addPersonSaga = function*() {
       yield put({
         type: ADD_PERSON_SUCCESS,
       });
+
+      yield put(reset);
 
       yield put(fetchAll());
 
