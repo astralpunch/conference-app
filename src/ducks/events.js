@@ -75,6 +75,12 @@ export const entitiesSelector = createSelector(stateSelector, state => state.ent
 export const eventListSelector = createSelector(entitiesSelector, entities =>
   entities.valueSeq().toArray(),
 );
+export const selectionSelector = createSelector(stateSelector, state => state.selected);
+export const selectedEventsSelector = createSelector(
+  selectionSelector,
+  entitiesSelector,
+  (selected, entities) => selected.map(uid => entities.get(uid)),
+);
 
 // Action Creators
 

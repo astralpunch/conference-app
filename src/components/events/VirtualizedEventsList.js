@@ -51,9 +51,10 @@ export class EventList extends Component {
     return this.props.events[index];
   };
 
-  handleRowClick = rowData => {
+  handleRowClick = row => {
     const { selectEvent } = this.props;
-    selectEvent && selectEvent(rowData.uid);
+
+    selectEvent && selectEvent(row.rowData.uid);
   };
 }
 
