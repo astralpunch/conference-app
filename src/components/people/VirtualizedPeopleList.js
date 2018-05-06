@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { moduleName, fetchAll, peopleListSelector } from '../../ducks/people';
+import { moduleName, fetchAllPeople, peopleListSelector } from '../../ducks/people';
 import { Table, Column } from 'react-virtualized';
 
 import 'react-virtualized/styles.css';
 
 export class VirtualizedPeopleList extends Component {
   componentDidMount() {
-    this.props.fetchAll();
+    this.props.fetchAllPeople();
   }
 
   render() {
@@ -40,5 +40,5 @@ export default connect(
     people: peopleListSelector(state),
     loading: state[moduleName].loading,
   }),
-  { fetchAll },
+  { fetchAllPeople },
 )(VirtualizedPeopleList);
