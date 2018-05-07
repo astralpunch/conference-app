@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { moduleName, fetchLazy, selectEvent, eventListSelector } from '../../ducks/events';
 import { Table, Column, InfiniteLoader } from 'react-virtualized';
+
+import {
+  moduleName,
+  fetchLazy,
+  selectEvent,
+  eventListSelector,
+  selectionSelector,
+} from '../../ducks/events';
 
 import 'react-virtualized/styles.css';
 
@@ -24,6 +31,7 @@ export class EventList extends Component {
             ref={registerChild}
             rowCount={events.length}
             rowGetter={this.rowGetter}
+            rowStyle={this.getRowStyle}
             rowHeight={40}
             headerHeight={50}
             overscanRowCount={5}
@@ -41,15 +49,21 @@ export class EventList extends Component {
     );
   }
 
+  getRowStyle = ({ index }) => {
+    const { events, selection } = this.props;
+
+    return selection.includes(events[index] && events[index].uid)
+      ? { backgroundColor: '#c6bce5' }
+      : null;
+  };
+
   isRowLoaded = ({ index }) => index < this.props.events.length;
 
   loadMoreRows = () => {
     this.props.fetchLazy();
   };
 
-  rowGetter = ({ index }) => {
-    return this.props.events[index];
-  };
+  rowGetter = ({ index }) => this.props.events[index];
 
   handleRowClick = row => {
     const { selectEvent } = this.props;
@@ -61,6 +75,7 @@ export class EventList extends Component {
 export default connect(
   state => ({
     events: eventListSelector(state),
+    selection: selectionSelector(state),
     loading: state[moduleName].loading,
   }),
   { fetchLazy, selectEvent },

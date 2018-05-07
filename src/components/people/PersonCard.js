@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { DragSource } from 'react-dnd';
-import { getEmptyImage } from 'react-dnd-html5-backend';
 
 class PersonCard extends Component {
-  componentDidMount() {
-    // this.props.connectPreview(getEmptyImage());
-  }
-
   render() {
     const { person, style, connectDragSource, isDragging } = this.props;
 

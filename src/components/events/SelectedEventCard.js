@@ -9,8 +9,9 @@ class EventCard extends Component {
     const { title, when, where } = this.props.event;
 
     const dropStyle = {
-      border: `1px solid ${canDrop ? 'blue' : 'black'}`,
-      backgroundColor: hovered ? 'purple' : 'white',
+      border: `2px solid ${canDrop ? '#b4c6b6' : 'black'}`,
+      marginBottom: '5px',
+      backgroundColor: hovered ? 'grey' : 'white',
     };
 
     const peopleElement = people && <p>{people.map(person => person.email).join(', ')}</p>;
