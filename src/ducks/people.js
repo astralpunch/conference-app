@@ -62,9 +62,6 @@ export default (state = new ReducerRecord(), action) => {
     case ADD_EVENT_TO_PERSON_SUCCESS:
       return state.setIn(['entities', payload.personUid, 'events'], payload.events);
 
-    case REMOVE_EVENT_FROM_PERSON_SUCCESS:
-      return state.setIn(['entities', payload.uid, 'events'], payload.events);
-
     default:
       return state;
   }
@@ -167,27 +164,34 @@ export const addEventToPersonSaga = function*(action) {
 export const removeEventFromPersonSaga = function*(action) {
   const { uid } = action.payload;
 
-  // const eventsRef = firebase.database().ref(`people/${personUid}/events`);
+  const peopleRef = firebase.database().ref(`people`);
 
   const state = yield select(stateSelector);
 
   const people = state.get('entities');
 
-  const test = people.map(person =>
-    person.update('events', events => events.filter(event => event !== uid)),
-  );
-  console.log(test.toJS());
+  const updatedPeopleEvents = people.reduce((acc, person) => {
+    if (person.events.includes(uid)) {
+      return {
+        ...acc,
+        [`${person.uid}/events`]: person.events.filter(event => event !== uid),
+      };
+    }
+
+    return acc;
+  }, {});
 
   try {
-    // yield call([eventsRef, eventsRef.set], events);
+    yield call([peopleRef, peopleRef.update], updatedPeopleEvents);
 
     yield put({
       type: REMOVE_EVENT_FROM_PERSON_SUCCESS,
       payload: {
-        uid,
-        // events,
+        updatedPeopleEvents,
       },
     });
+
+    yield put(fetchAllPeople());
   } catch (_) {}
 };
 

@@ -47,7 +47,9 @@ const collect = (connect, monitor) => ({
 
 export default connect(
   (state, props) => ({
-    people: peopleListSelector(state).filter(person => person.events.includes(props.event.uid)),
+    people: peopleListSelector(state).filter(
+      person => person.events && person.events.includes(props.event.uid),
+    ),
   }),
   { addEventToPerson },
 )(DropTarget(['person'], spec, collect)(EventCard));

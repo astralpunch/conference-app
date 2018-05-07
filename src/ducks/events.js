@@ -68,7 +68,7 @@ export default function reducer(state = new ReducerRecord(), action) {
         : state.update('selected', selected => selected.add(payload.uid));
 
     case REMOVE_EVENT_SUCCESS:
-      return state.update('entities', entities => entities.delete(payload.eventUid));
+      return state.deleteIn(['entities', payload.uid]);
 
     default:
       return state;
@@ -167,10 +167,11 @@ export const fetchLazySaga = function*() {
 export const removeEventSaga = function*(action) {
   const { uid } = action.payload;
 
-  const event = firebase.database().ref(`events/${uid}`);
+  const ref = firebase.database().ref(`events/${uid}`);
 
   try {
-    // yield call([event, event.remove]);
+    yield call([ref, ref.remove]);
+
     yield put({
       type: REMOVE_EVENT_FROM_PERSON_REQUEST,
       payload: { uid },
