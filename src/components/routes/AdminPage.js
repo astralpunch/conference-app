@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import VirtualizedEventsList from '../events/VirtualizedEventsList';
 import SelectedEvents from '../events/SelectedEvents';
 import PeopleList from '../people/PeopleList';
+import EventsTrashBin from '../events/EventsTrashBin';
 
 class AdminPage extends Component {
   render() {
@@ -13,8 +14,9 @@ class AdminPage extends Component {
           <PeopleList />
           <SelectedEvents />
         </div>
-        <div>
+        <div style={{ display: 'flex' }}>
           <VirtualizedEventsList />
+          <EventsTrashBin />
         </div>
       </div>
     );

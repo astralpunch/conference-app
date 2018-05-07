@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Column, InfiniteLoader } from 'react-virtualized';
 
+import TableRow from '../events/TableRow';
+
 import {
   moduleName,
   fetchLazy,
@@ -39,6 +41,7 @@ export class EventList extends Component {
             height={300}
             onRowClick={this.handleRowClick}
             onRowsRendered={onRowsRendered}
+            rowRenderer={this.getRowRenderer}
           >
             <Column label="title" dataKey="title" width={300} />
             <Column label="where" dataKey="where" width={250} />
@@ -48,6 +51,8 @@ export class EventList extends Component {
       </InfiniteLoader>
     );
   }
+
+  getRowRenderer = props => <TableRow {...props} />;
 
   getRowStyle = ({ index }) => {
     const { events, selection } = this.props;

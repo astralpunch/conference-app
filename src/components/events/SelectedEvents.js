@@ -8,7 +8,9 @@ class SelectedEvents extends Component {
   render() {
     return (
       <div>
-        {this.props.events.map(event => <SelectedEventCard event={event} key={event.uid} />)}
+        {this.props.events.map(
+          event => event && <SelectedEventCard event={event} key={event.uid} />,
+        )}
       </div>
     );
   }

@@ -30,8 +30,11 @@ export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`;
 export const FETCH_ALL_REQUEST = `${prefix}/FETCH_ALL_REQUEST`;
 export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`;
 
-export const ADD_EVENT_REQUEST = `${prefix}/ADD_EVENT_REQUEST`;
-export const ADD_EVENT_SUCCESS = `${prefix}/ADD_EVENT_SUCCESS`;
+export const ADD_EVENT_TO_PERSON_REQUEST = `${prefix}/ADD_EVENT_TO_PERSON_REQUEST`;
+export const ADD_EVENT_TO_PERSON_SUCCESS = `${prefix}/ADD_EVENT_TO_PERSON_SUCCESS`;
+
+export const REMOVE_EVENT_FROM_PERSON_REQUEST = `${prefix}/REMOVE_EVENT_FROM_PERSON_REQUEST`;
+export const REMOVE_EVENT_FROM_PERSON_SUCCESS = `${prefix}/REMOVE_EVENT_FROM_PERSON_SUCCESS`;
 
 // Reducer
 
@@ -56,8 +59,11 @@ export default (state = new ReducerRecord(), action) => {
         .set('loading', false)
         .setIn(['entities', payload.uid], new PersonRecord(payload));
 
-    case ADD_EVENT_SUCCESS:
+    case ADD_EVENT_TO_PERSON_SUCCESS:
       return state.setIn(['entities', payload.personUid, 'events'], payload.events);
+
+    case REMOVE_EVENT_FROM_PERSON_SUCCESS:
+      return state.setIn(['entities', payload.uid, 'events'], payload.events);
 
     default:
       return state;
@@ -92,7 +98,7 @@ export const addPerson = person => {
 };
 
 export const addEventToPerson = (eventUid, personUid) => ({
-  type: ADD_EVENT_REQUEST,
+  type: ADD_EVENT_TO_PERSON_REQUEST,
   payload: { eventUid, personUid },
 });
 
@@ -119,9 +125,9 @@ export const addPersonSaga = function*(action) {
   } = action;
 
   try {
-    const peopleIdRef = firebase.database().ref('people');
+    const peopleRef = firebase.database().ref('people');
 
-    const ref = yield call([peopleIdRef, peopleIdRef.push], values);
+    const ref = yield call([peopleRef, peopleRef.push], values);
 
     yield put({
       type: ADD_PERSON_SUCCESS,
@@ -136,23 +142,50 @@ export const addPersonSaga = function*(action) {
   }
 };
 
-export const addEventSaga = function*(action) {
+export const addEventToPersonSaga = function*(action) {
   const { eventUid, personUid } = action.payload;
-  console.log(1);
+
   const eventsRef = firebase.database().ref(`people/${personUid}/events`);
-  console.log(2);
+
   const state = yield select(stateSelector);
-  console.log(3);
+
   const events = state.getIn(['entities', personUid, 'events']).concat(eventUid);
-  console.log(4);
 
   try {
     yield call([eventsRef, eventsRef.set], events);
+
     yield put({
-      type: ADD_EVENT_SUCCESS,
+      type: ADD_EVENT_TO_PERSON_SUCCESS,
       payload: {
         personUid,
         events,
+      },
+    });
+  } catch (_) {}
+};
+
+export const removeEventFromPersonSaga = function*(action) {
+  const { uid } = action.payload;
+
+  // const eventsRef = firebase.database().ref(`people/${personUid}/events`);
+
+  const state = yield select(stateSelector);
+
+  const people = state.get('entities');
+
+  const test = people.map(person =>
+    person.update('events', events => events.filter(event => event !== uid)),
+  );
+  console.log(test.toJS());
+
+  try {
+    // yield call([eventsRef, eventsRef.set], events);
+
+    yield put({
+      type: REMOVE_EVENT_FROM_PERSON_SUCCESS,
+      payload: {
+        uid,
+        // events,
       },
     });
   } catch (_) {}
@@ -162,6 +195,7 @@ export const saga = function*() {
   yield all([
     fetchAllPeopleSaga(),
     takeEvery(ADD_PERSON_REQUEST, addPersonSaga),
-    takeEvery(ADD_EVENT_REQUEST, addEventSaga),
+    takeEvery(ADD_EVENT_TO_PERSON_REQUEST, addEventToPersonSaga),
+    takeEvery(REMOVE_EVENT_FROM_PERSON_REQUEST, removeEventFromPersonSaga),
   ]);
 };
