@@ -17,14 +17,16 @@ const generateList = length => {
 };
 
 it('should render', done => {
-  const container = shallow(<VirtualizedPeopleList people={generateList(10)} fetchAll={done} />);
+  const container = shallow(
+    <VirtualizedPeopleList people={generateList(10)} fetchAllPeople={done} />,
+  );
   expect(container.length).toEqual(1);
 });
 
 it('should render a part of long list', done => {
   const longList = generateList(200);
 
-  const container = mount(<VirtualizedPeopleList fetchAll={done} people={longList} />);
+  const container = mount(<VirtualizedPeopleList fetchAllPeople={done} people={longList} />);
   const rows = container.find('.test--people-list__row');
 
   expect(rows.length).toEqual(10);

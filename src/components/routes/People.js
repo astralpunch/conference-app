@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import AddPersonForm from '../people/AddPersonForm';
-import Loader from '../common/Loader';
 
 import { addPerson, moduleName } from '../../ducks/people';
 import VirtualizedPeopleList from '../people/VirtualizedPeopleList';
@@ -12,7 +11,7 @@ class People extends Component {
     return (
       <div>
         <h1>People</h1>
-        {this.props.loading ? <Loader /> : <AddPersonForm onSubmit={this.submitPerson} />}
+        {<AddPersonForm onSubmit={this.submitPerson} />}
         <VirtualizedPeopleList />
       </div>
     );

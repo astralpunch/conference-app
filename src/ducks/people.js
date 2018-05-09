@@ -4,7 +4,8 @@ import { createSelector } from 'reselect';
 import { SubmissionError, reset } from 'redux-form';
 import firebase from 'firebase';
 import { fbDatatoEntities } from './utils';
-import { put, call, take, all, takeEvery, select } from 'redux-saga/effects';
+import { put, call, takeEvery, all, select, spawn, take } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
 
 const ReducerRecord = Record({
   entities: new OrderedMap({}),
@@ -123,7 +124,6 @@ export const addPersonSaga = function*(action) {
 
   try {
     const peopleRef = firebase.database().ref('people');
-
     const ref = yield call([peopleRef, peopleRef.push], values);
 
     yield put({
@@ -145,7 +145,6 @@ export const addEventToPersonSaga = function*(action) {
   const eventsRef = firebase.database().ref(`people/${personUid}/events`);
 
   const state = yield select(stateSelector);
-
   const events = state.getIn(['entities', personUid, 'events']).concat(eventUid);
 
   try {
@@ -167,7 +166,6 @@ export const removeEventFromPersonSaga = function*(action) {
   const peopleRef = firebase.database().ref(`people`);
 
   const state = yield select(stateSelector);
-
   const people = state.get('entities');
 
   const updatedPeopleEvents = people.reduce((acc, person) => {
@@ -195,9 +193,39 @@ export const removeEventFromPersonSaga = function*(action) {
   } catch (_) {}
 };
 
+const createPeopleSocket = () =>
+  eventChannel(emmit => {
+    const ref = firebase.database().ref('people');
+    const callback = data => emmit({ data });
+
+    ref.on('value', callback);
+
+    return () => {
+      ref.off('value', callback);
+    };
+  });
+
+export const realtimeSync = function*() {
+  const chan = yield call(createPeopleSocket);
+
+  try {
+    while (true) {
+      const { data } = yield take(chan);
+
+      yield put({
+        type: FETCH_ALL_SUCCESS,
+        payload: data.val(),
+      });
+    }
+  } finally {
+    yield call([chan, chan.close]);
+  }
+};
+
 export const saga = function*() {
+  yield spawn(realtimeSync);
+
   yield all([
-    fetchAllPeopleSaga(),
     takeEvery(ADD_PERSON_REQUEST, addPersonSaga),
     takeEvery(ADD_EVENT_TO_PERSON_REQUEST, addEventToPersonSaga),
     takeEvery(REMOVE_EVENT_FROM_PERSON_REQUEST, removeEventFromPersonSaga),

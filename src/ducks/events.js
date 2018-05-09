@@ -86,7 +86,11 @@ export const selectionSelector = createSelector(stateSelector, state => state.se
 export const selectedEventsSelector = createSelector(
   selectionSelector,
   entitiesSelector,
-  (selected, entities) => selected.map(uid => entities.get(uid)),
+  (selected, entities) => selected.map(uid => entities.get(uid)).toArray(),
+);
+export const idSelector = (state, props) => props.uid;
+export const eventSelector = createSelector(entitiesSelector, idSelector, (entities, id) =>
+  entities.get(id),
 );
 
 // Action Creators
@@ -124,7 +128,6 @@ export const fetchAllSaga = function*() {
     yield take(FETCH_ALL_REQUEST);
 
     const ref = firebase.database().ref('events');
-
     const data = yield call([ref, ref.once], 'value');
 
     yield put({

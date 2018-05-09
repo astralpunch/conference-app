@@ -24,7 +24,7 @@ class EventsTrashBin extends Component {
 
 const spec = {
   drop(props, monitor) {
-    const eventUid = monitor.getItem().eventUid;
+    const eventUid = monitor.getItem().uid;
 
     props.removeEvent(eventUid);
 
