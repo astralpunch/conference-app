@@ -21,10 +21,12 @@ class Root extends Component {
     return (
       <Container>
         <FlexWrapper>
-          <Nav>
-            <SCNavLink to="/people">People</SCNavLink>
-            <SCNavLink to="/admin">Admin page</SCNavLink>
-          </Nav>
+          {signedIn && (
+            <Nav>
+              <SCNavLink to="/people">People</SCNavLink>
+              <SCNavLink to="/admin">Admin page</SCNavLink>
+            </Nav>
+          )}
           <UserBlock>{btn}</UserBlock>
         </FlexWrapper>
         <Switch>
