@@ -20,8 +20,6 @@ const previewMap = {
 };
 
 class CustomDragLayer extends Component {
-  static propTypes = {};
-
   getItem() {
     const { offset, item, itemType } = this.props;
 
@@ -31,7 +29,7 @@ class CustomDragLayer extends Component {
 
     const { x, y } = offset;
     const style = {
-      transform: `translate(${x}px, ${y}px)`,
+      transform: `translate(${x}px, ${y - 25}px)`,
     };
 
     return (
@@ -56,7 +54,7 @@ class CustomDragLayer extends Component {
 
 const collect = monitor => ({
   isDragging: monitor.isDragging(),
-  offset: monitor.getSourceClientOffset(),
+  offset: monitor.getClientOffset(),
   item: monitor.getItem(),
   itemType: monitor.getItemType(),
 });

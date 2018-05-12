@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-// import { SubmissionError } from 'redux-form';
 import SignInForm from '../auth/SignInForm';
 import SignUpForm from '../auth/SignUpForm';
 import { Route, NavLink, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import { signUp, signIn, moduleName } from '../../ducks/auth';
+
 import Loader from '../common/Loader';
 
 class AuthPage extends Component {
   render() {
     const { loading, error } = this.props;
+
     return (
       <div>
         <h1>Auth page</h1>
@@ -35,16 +37,11 @@ class AuthPage extends Component {
   }
 
   handleSignIn = ({ email, password }) => this.props.signIn(email, password);
+
   handleSignUp = ({ email, password }) => {
     const { signUp } = this.props;
 
     return signUp(email, password);
-    // .then(
-    //   res => res,
-    //   error => {
-    //     throw new SubmissionError({ _error: error.message });
-    //   },
-    // );
   };
 }
 

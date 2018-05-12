@@ -68,7 +68,9 @@ export default function reducer(state = new ReducerRecord(), action) {
         : state.update('selected', selected => selected.add(payload.uid));
 
     case REMOVE_EVENT_SUCCESS:
-      return state.deleteIn(['entities', payload.uid]);
+      return state
+        .deleteIn(['entities', payload.uid])
+        .update('selected', selected => selected.remove(payload.uid));
 
     default:
       return state;

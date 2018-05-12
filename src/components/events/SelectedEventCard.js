@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { DropTarget } from 'react-dnd';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 
 import { addEventToPerson, peopleListSelector } from '../../ducks/people';
 
@@ -9,22 +10,17 @@ class EventCard extends Component {
     const { connectDropTarget, hovered, canDrop, people } = this.props;
     const { title, when, where } = this.props.event;
 
-    const dropStyle = {
-      border: `2px solid ${canDrop ? '#b4c6b6' : 'black'}`,
-      marginBottom: '5px',
-      padding: '5px',
-      backgroundColor: hovered ? 'grey' : '#c6bce5',
-    };
-
     const peopleElement = people && <p>{people.map(person => person.email).join(', ')}</p>;
 
     return connectDropTarget(
-      <div style={{ ...this.props.style, ...dropStyle }}>
-        <h3>{title}</h3>
-        <p>
-          {where}, {when}
-        </p>
-        {peopleElement}
+      <div>
+        <SCEventCard canDrop={canDrop} hovered={hovered} reactMotionStyle={this.props.style}>
+          <h3>{title}</h3>
+          <p>
+            {where}, {when}
+          </p>
+          {peopleElement}
+        </SCEventCard>
       </div>,
     );
   }
@@ -36,8 +32,6 @@ const spec = {
     const eventUid = props.event.uid;
 
     props.addEventToPerson(eventUid, personUid);
-
-    return { eventUid };
   },
 };
 
@@ -55,3 +49,15 @@ export default connect(
   }),
   { addEventToPerson },
 )(DropTarget(['person'], spec, collect)(EventCard));
+
+const SCEventCard = styled.div.attrs({
+  style: props => props.reactMotionStyle,
+})`
+  width: 250px;
+  min-height: 150px;
+  text-align: center;
+  margin: 10px;
+  padding: 5px;
+  margin-right: 20px;
+  background-color: ${props => (props.hovered ? '#bea7ce' : '#e5daed')};
+`;

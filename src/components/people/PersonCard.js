@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { DragSource } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
+import styled from 'styled-components';
+import { connect } from 'react-redux';
+
+import { eventListSelector } from '../../ducks/events';
 
 class PersonCard extends Component {
   componentDidMount() {
@@ -8,18 +12,21 @@ class PersonCard extends Component {
   }
 
   render() {
-    const { person, style, connectDragSource, isDragging } = this.props;
-
-    const draggStyle = {
-      backgroundColor: isDragging ? 'grey' : 'white',
-    };
+    const { person, virtualizedStyle, connectDragSource, isDragging, events } = this.props;
 
     return connectDragSource(
-      <div style={{ width: 200, height: 100, ...draggStyle, ...style }}>
-        <h3>
-          {person.firstName}&nbsp;{person.lastName}
-        </h3>
-        <p>{person.email}</p>
+      <div>
+        <SCPersonCard isDragging={isDragging} virtualizedStyle={virtualizedStyle}>
+          <h3>
+            {person.firstName}&nbsp;{person.lastName}
+          </h3>
+          <p>{person.email}</p>
+          {!!person.events.length && (
+            <SCAttendingEvents>
+              Attending: <SCEventSpan>{events.map(event => event.title).join(', ')}</SCEventSpan>
+            </SCAttendingEvents>
+          )}
+        </SCPersonCard>
       </div>,
     );
   }
@@ -31,14 +38,6 @@ const spec = {
       uid: props.person.uid,
     };
   },
-
-  endDrag: (props, monitor) => {
-    const personUid = props.person.uid;
-    const dropRes = monitor.getDropResult();
-    const eventUid = dropRes && dropRes.eventUid;
-
-    console.log('endDrag', personUid, eventUid);
-  },
 };
 
 const collect = (connect, monitor) => ({
@@ -47,4 +46,22 @@ const collect = (connect, monitor) => ({
   isDragging: monitor.isDragging(),
 });
 
-export default DragSource('person', spec, collect)(PersonCard);
+export default connect((state, props) => ({
+  events: eventListSelector(state).filter(event => props.person.events.includes(event.uid)),
+}))(DragSource('person', spec, collect)(PersonCard));
+
+const SCPersonCard = styled.div.attrs({
+  style: props => props.virtualizedStyle,
+})`
+  width: 200px;
+  border: 1px solid #e6e9ed;
+  background-color: ${props => (props.isDragging ? '#d0cfd1' : '#fff')};
+`;
+
+const SCAttendingEvents = styled.p`
+  color: #d0cfd1;
+`;
+
+const SCEventSpan = styled.span`
+  color: paleturquoise;
+`;

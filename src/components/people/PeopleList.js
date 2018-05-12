@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { List } from 'react-virtualized';
 import { connect } from 'react-redux';
-import { TransitionMotion, spring } from 'react-motion';
+import styled from 'styled-components';
 
 import PersonCard from './PersonCard';
 
@@ -14,52 +14,18 @@ class PeopleList extends Component {
 
   render() {
     return (
-      // <List
-      //   rowCount={this.props.people.length}
-      //   rowHeight={100}
-      //   height={300}
-      //   width={200}
-      //   rowRenderer={this.rowRenderer}
-      // />
-
-      <TransitionMotion
-        styles={this.getStyles()}
-        willLeave={this.willLeave}
-        willEnter={this.willEnter}
-      >
-        {interpolated => (
-          <List
-            rowCount={this.props.people.length}
-            rowHeight={100}
-            height={300}
-            width={200}
-            rowRenderer={this.rowRenderer}
-          />
-          // <ul>
-          //   {interpolated.map(config => (
-          //     <li style={config.style} key={config.key}>
-          //       <SelectedEventCard event={config.data} />
-          //     </li>
-          //   ))}
-          // </ul>
-        )}
-      </TransitionMotion>
+      <SCList
+        rowCount={this.props.people.length}
+        rowHeight={150}
+        height={400}
+        width={300}
+        rowRenderer={this.rowRenderer}
+      />
     );
-    // );
-  }
-
-  getStyles() {
-    return this.props.people.map(person => ({
-      style: {
-        opacity: spring(1, { stiffness: 70 }),
-      },
-      key: person.uid,
-      data: person,
-    }));
   }
 
   rowRenderer = ({ index, key, style }) => (
-    <PersonCard person={this.props.people[index]} key={key} style={style} />
+    <PersonCard person={this.props.people[index]} key={key} virtualizedStyle={style} />
   );
 }
 
@@ -69,3 +35,9 @@ export default connect(
   }),
   { fetchAllPeople },
 )(PeopleList);
+
+const SCList = styled(List)`
+  border: 1px solid black;
+  margin: 5px;
+  text-align: center;
+`;
