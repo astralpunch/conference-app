@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 
 import AddPersonForm from '../people/AddPersonForm';
 
@@ -9,11 +10,11 @@ import VirtualizedPeopleList from '../people/VirtualizedPeopleList';
 class People extends Component {
   render() {
     return (
-      <div>
-        <h1>People</h1>
-        {<AddPersonForm onSubmit={this.submitPerson} />}
+      <Wrapper>
+        <MainHeader>Add new person</MainHeader>
+        <AddPersonForm onSubmit={this.submitPerson} />
         <VirtualizedPeopleList />
-      </div>
+      </Wrapper>
     );
   }
 
@@ -32,3 +33,15 @@ export default connect(
   }),
   { addPerson },
 )(People);
+
+const MainHeader = styled.h1`
+  text-align: center;
+  margin-bottom: 30px;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  justify-content: center;
+`;

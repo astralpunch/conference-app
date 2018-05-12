@@ -54,7 +54,8 @@ const SCEventCard = styled.div.attrs({
   style: props => props.reactMotionStyle,
 })`
   width: 250px;
-  min-height: 150px;
+  min-height: 200px;
+  overflow: auto;
   text-align: center;
   margin: 10px;
   padding: 5px;

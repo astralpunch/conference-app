@@ -9,43 +9,43 @@ import EventsTrashBin from '../events/EventsTrashBin';
 class AdminPage extends Component {
   render() {
     return (
-      <SCWrapper>
-        <SCMainHeader>Admin Page</SCMainHeader>
-        <SCRow>
+      <Wrapper>
+        <MainHeader>Admin Page</MainHeader>
+        <Row>
           <VirtualizedEventsList />
           <EventsTrashBin />
-        </SCRow>
-        <SCHeader>Drag person to event</SCHeader>
-        <SCRow>
+        </Row>
+        <Header>Drag person to event</Header>
+        <Row>
           <PeopleList />
           <SelectedEvents />
-        </SCRow>
-      </SCWrapper>
+        </Row>
+      </Wrapper>
     );
   }
 }
 
 export default AdminPage;
 
-const SCMainHeader = styled.h1`
+const MainHeader = styled.h1`
   margin: auto;
   margin-bottom: 50px;
   margin-top: 30px;
 `;
 
-const SCHeader = styled.h2`
+const Header = styled.h2`
   margin: auto;
   margin-bottom: 10px;
 `;
 
-const SCWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   margin: auto;
   flex-direction: column;
   justify-content: center;
 `;
 
-const SCRow = styled.div`
+const Row = styled.div`
   display: flex;
   margin-bottom: 50px;
 `;

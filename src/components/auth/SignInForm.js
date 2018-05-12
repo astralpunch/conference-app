@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
+import styled from 'styled-components';
+
+import ErrorField from '../common/ErrorField';
 
 class SignInForm extends Component {
   render() {
     const { handleSubmit, onSubmit } = this.props;
+
     return (
       <div>
-        <h2>Sign In</h2>
+        <Header>Sign In</Header>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <label>Email</label>
-            <Field name="email" component="input" />
+            <Field name="email" placeholder="Email" component={ErrorField} />
           </div>
           <div>
-            <label>Password</label>
-            <Field name="password" component="input" type="password" />
+            <Field name="password" placeholder="Password" component={ErrorField} type="password" />
           </div>
-          <div>
-            <input type="submit" />
-          </div>
+          <SubmitBtn type="submit">Submit</SubmitBtn>
         </form>
       </div>
     );
@@ -28,3 +28,15 @@ class SignInForm extends Component {
 export default reduxForm({
   form: 'auth',
 })(SignInForm);
+
+const Header = styled.h2`
+  text-align: center;
+`;
+
+const SubmitBtn = styled.button`
+  display: block;
+  font-size: 20px;
+  width: 355px;
+  height: 35px;
+  background-color: paleturquoise;
+`;

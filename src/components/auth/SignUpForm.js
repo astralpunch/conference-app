@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import emailValidator from 'email-validator';
+import styled from 'styled-components';
+
 import ErrorField from '../common/ErrorField';
 
 class SignUpForm extends Component {
@@ -9,13 +11,11 @@ class SignUpForm extends Component {
 
     return (
       <div>
-        <h2>Sign Up</h2>
+        <Header>Sign Up</Header>
         <form onSubmit={handleSubmit}>
-          <Field name="email" component={ErrorField} />
-          <Field name="password" component={ErrorField} type="password" />
-          <div>
-            <input type="submit" />
-          </div>
+          <Field placeholder="Email" name="email" component={ErrorField} />
+          <Field placeholder="Password" name="password" component={ErrorField} type="password" />
+          <SubmitBtn type="submit">Submit</SubmitBtn>
           {submitFailed && <div style={{ color: 'red' }}>{error}</div>}
         </form>
       </div>
@@ -39,3 +39,15 @@ export default reduxForm({
   form: 'auth',
   validate,
 })(SignUpForm);
+
+const Header = styled.h2`
+  text-align: center;
+`;
+
+const SubmitBtn = styled.button`
+  display: block;
+  font-size: 20px;
+  width: 355px;
+  height: 35px;
+  background-color: paleturquoise;
+`;

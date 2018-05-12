@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import SignInForm from '../auth/SignInForm';
-import SignUpForm from '../auth/SignUpForm';
 import { Route, NavLink, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
+
+import SignInForm from '../auth/SignInForm';
+import SignUpForm from '../auth/SignUpForm';
 
 import { signUp, signIn, moduleName } from '../../ducks/auth';
 
@@ -13,14 +15,12 @@ class AuthPage extends Component {
     const { loading, error } = this.props;
 
     return (
-      <div>
-        <h1>Auth page</h1>
-        <NavLink to="/auth/signin" activeStyle={{ color: 'red' }}>
-          sign in
-        </NavLink>
-        <NavLink to="/auth/signup" activeStyle={{ color: 'red' }}>
-          sign up
-        </NavLink>
+      <Wrapper>
+        <MainHeader>Auth page</MainHeader>
+        <Links>
+          <SCNavLink to="/auth/signin">Sign in</SCNavLink>
+          <SCNavLink to="/auth/signup">Sign up</SCNavLink>
+        </Links>
         <Switch>
           <Route
             path="/auth/signin"
@@ -32,7 +32,7 @@ class AuthPage extends Component {
           />
         </Switch>
         {loading && <Loader />}
-      </div>
+      </Wrapper>
     );
   }
 
@@ -52,3 +52,39 @@ export default connect(
   }),
   { signUp, signIn },
 )(AuthPage);
+
+const Wrapper = styled.div`
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+`;
+
+const Links = styled.div`
+  display: flex;
+  margin: auto;
+`;
+
+const SCNavLink = styled(NavLink)`
+  display: flex;
+  width: 100px;
+  min-height: 40px;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  background-color: #dbc3c3;
+  margin-right: 10px;
+  &:hover {
+    background-color: #edd8d0;
+  }
+  &:active {
+    color: white;
+  }
+  &.active {
+    background-color: #efe4d2;
+  }
+`;
+
+const MainHeader = styled.h1`
+  text-align: center;
+`;

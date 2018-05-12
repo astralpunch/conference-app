@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Table, Column, InfiniteLoader } from 'react-virtualized';
 import styled from 'styled-components';
@@ -24,8 +24,8 @@ export class EventList extends Component {
     const { loaded, events } = this.props;
 
     return (
-      <SCWrapper>
-        <SCHeader>Select events to add people</SCHeader>
+      <Wrapper>
+        <Header>Select events to add people</Header>
         <InfiniteLoader
           isRowLoaded={this.isRowLoaded}
           rowCount={loaded ? events.length : events.length + 1}
@@ -39,7 +39,7 @@ export class EventList extends Component {
               rowStyle={this.getRowStyle}
               rowHeight={40}
               headerHeight={50}
-              overscanRowCount={5}
+              overanRowCount={5}
               style={{ border: '1px solid black' }}
               width={600}
               height={300}
@@ -53,7 +53,7 @@ export class EventList extends Component {
             </Table>
           )}
         </InfiniteLoader>
-      </SCWrapper>
+      </Wrapper>
     );
   }
 
@@ -90,13 +90,13 @@ export default connect(
   { fetchLazy, selectEvent },
 )(EventList);
 
-const SCWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   margin-right: 40px;
   flex-direction: column;
   justify-content: center;
 `;
 
-const SCHeader = styled.h2`
+const Header = styled.h2`
   text-align: center;
 `;

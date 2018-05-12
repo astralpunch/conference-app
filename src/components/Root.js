@@ -8,7 +8,6 @@ import ProtectedRoute from './common/ProtectedRoute';
 import AdminPage from './routes/AdminPage';
 import AuthPage from './routes/AuthPage';
 import People from './routes/People';
-import Events from './routes/Events';
 import CustomDragLayer from './common/CustomDragLayer';
 
 import { moduleName, signOut } from '../ducks/auth';
@@ -17,25 +16,20 @@ class Root extends Component {
   render() {
     const { signOut, signedIn } = this.props;
 
-    const btn = signedIn ? (
-      <SCSignOutBtn onClick={signOut}>Sign out</SCSignOutBtn>
-    ) : (
-      <Link to="/auth/signin">Sign in</Link>
-    );
+    const btn = signedIn && <SignOutBtn onClick={signOut}>Sign out</SignOutBtn>;
 
     return (
       <Container>
         <FlexWrapper>
-          <SCNav>
+          <Nav>
             <SCNavLink to="/people">People</SCNavLink>
             <SCNavLink to="/admin">Admin page</SCNavLink>
-          </SCNav>
-          <SCUserBlock>{btn}</SCUserBlock>
+          </Nav>
+          <UserBlock>{btn}</UserBlock>
         </FlexWrapper>
         <Switch>
           <ProtectedRoute path="/admin" component={AdminPage} />
           <ProtectedRoute path="/people" component={People} />
-          <ProtectedRoute path="/events" component={Events} />
           <Route path="/auth" component={AuthPage} />
         </Switch>
         <CustomDragLayer />
@@ -53,7 +47,7 @@ export default connect(
   { pure: false },
 )(Root);
 
-const SCSignOutBtn = styled.button`
+const SignOutBtn = styled.button`
   font-size: 20px;
   width: 100px;
   background-color: Transparent;
@@ -71,11 +65,11 @@ const SCSignOutBtn = styled.button`
   }
 `;
 
-const SCUserBlock = styled.div`
+const UserBlock = styled.div`
   margin-right: 10px;
 `;
 
-const SCNav = styled.div`
+const Nav = styled.nav`
   position: absolute;
   right: 45%;
 `;

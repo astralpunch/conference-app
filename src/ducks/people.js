@@ -131,7 +131,7 @@ export const addPersonSaga = function*(action) {
       payload: { uid: ref.key, ...values },
     });
 
-    yield put(reset());
+    yield put(reset('people'));
 
     yield call(resolve);
   } catch (err) {
@@ -196,6 +196,7 @@ export const removeEventFromPersonSaga = function*(action) {
 const createPeopleSocket = () =>
   eventChannel(emmit => {
     const ref = firebase.database().ref('people');
+
     const callback = data => emmit({ data });
 
     ref.on('value', callback);
@@ -205,7 +206,7 @@ const createPeopleSocket = () =>
     };
   });
 
-export const realtimeSync = function*() {
+export const realtimePeopleSync = function*() {
   const chan = yield call(createPeopleSocket);
 
   try {
@@ -223,7 +224,7 @@ export const realtimeSync = function*() {
 };
 
 export const saga = function*() {
-  yield spawn(realtimeSync);
+  yield spawn(realtimePeopleSync);
 
   yield all([
     takeEvery(ADD_PERSON_REQUEST, addPersonSaga),

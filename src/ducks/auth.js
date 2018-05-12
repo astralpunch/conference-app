@@ -1,8 +1,11 @@
 import firebase from 'firebase';
 import { appName } from '../config';
 import { Record } from 'immutable';
-import { all, cps, call, put, take, takeEvery } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
+import { all, call, put, take, spawn, takeEvery } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
+
+import { realtimePeopleSync } from './people';
 
 export const ReducerRecord = Record({
   user: null,
@@ -91,7 +94,10 @@ export const signUpSaga = function*() {
         type: SIGN_UP_SUCCESS,
         payload: { user },
       });
-      yield put(push('/auth/signin'));
+
+      yield spawn(realtimePeopleSync);
+
+      yield put(push('/people'));
     } catch (error) {
       yield put({
         type: SIGN_UP_ERROR,
@@ -117,12 +123,39 @@ export const signInSaga = function*() {
       payload: { user },
     });
 
-    yield put(push('/admin'));
+    yield spawn(realtimePeopleSync);
+
+    yield put(push('/people'));
   } catch (error) {
     yield put({
       type: SIGN_IN_ERROR,
       error,
     });
+  }
+};
+
+const createAuthChannel = () =>
+  eventChannel(emit => firebase.auth().onAuthStateChanged(user => emit({ user })));
+
+export const watchStatusChange = function*() {
+  const chan = yield call(createAuthChannel);
+
+  while (true) {
+    const { user } = yield take(chan);
+
+    if (user) {
+      yield put({
+        type: SIGN_IN_SUCCESS,
+        payload: { user },
+      });
+    } else {
+      yield put({
+        type: SIGN_OUT_SUCCESS,
+        payload: { user },
+      });
+
+      yield put(push('/auth/signin'));
+    }
   }
 };
 
@@ -138,19 +171,6 @@ export const signOutSaga = function*() {
 
     yield put(push('/auth/signin'));
   } catch (_) {}
-};
-
-export const watchStatusChange = function*() {
-  const auth = firebase.auth();
-
-  try {
-    yield cps([auth, auth.onAuthStateChanged]);
-  } catch (user) {
-    yield put({
-      type: SIGN_IN_SUCCESS,
-      payload: { user },
-    });
-  }
 };
 
 export const saga = function*() {

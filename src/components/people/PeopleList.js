@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { List } from 'react-virtualized';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
 
 import PersonCard from './PersonCard';
 
@@ -12,14 +11,19 @@ class PeopleList extends Component {
     this.props.fetchAllPeople();
   }
 
+  componentDidUpdate() {
+    this.List.recomputeRowHeights();
+  }
+
   render() {
     return (
-      <SCList
+      <List
         rowCount={this.props.people.length}
         rowHeight={150}
         height={400}
         width={300}
         rowRenderer={this.rowRenderer}
+        ref={ref => (this.List = ref)}
       />
     );
   }
@@ -35,9 +39,3 @@ export default connect(
   }),
   { fetchAllPeople },
 )(PeopleList);
-
-const SCList = styled(List)`
-  border: 1px solid black;
-  margin: 5px;
-  text-align: center;
-`;
