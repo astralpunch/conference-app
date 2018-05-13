@@ -4,7 +4,7 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import { eventListSelector } from '../../ducks/events';
+import { eventListSelector } from '../../../../ducks/events';
 
 class PersonCard extends Component {
   componentDidMount() {
@@ -22,9 +22,9 @@ class PersonCard extends Component {
           </h3>
           <p>{person.email}</p>
           {!!person.events.length && (
-            <SCAttendingEvents>
-              Attending: <SCEventSpan>{events.map(event => event.title).join(', ')}</SCEventSpan>
-            </SCAttendingEvents>
+            <p>
+              Attending: <Event>{events.map(event => event.title).join(', ')}</Event>
+            </p>
           )}
         </SCPersonCard>
       </div>,
@@ -58,10 +58,6 @@ const SCPersonCard = styled.div.attrs({
   background-color: ${props => (props.isDragging ? '#d0cfd1' : '#fff')};
 `;
 
-const SCAttendingEvents = styled.p`
-  color: #d0cfd1;
-`;
-
-const SCEventSpan = styled.span`
+const Event = styled.span`
   color: paleturquoise;
 `;

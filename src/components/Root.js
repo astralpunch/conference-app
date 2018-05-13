@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Link, NavLink, Switch } from 'react-router-dom';
+import { Route, NavLink, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -30,6 +30,7 @@ class Root extends Component {
           <UserBlock>{btn}</UserBlock>
         </FlexWrapper>
         <Switch>
+          <ProtectedRoute exact path="/" component={AdminPage} />
           <ProtectedRoute path="/admin" component={AdminPage} />
           <ProtectedRoute path="/people" component={People} />
           <Route path="/auth" component={AuthPage} />

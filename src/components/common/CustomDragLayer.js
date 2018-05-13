@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { DragLayer } from 'react-dnd';
 
-import PersonCardDragPreview from '../people/PersonCardDragPreview';
-import SelectedEventDragPreview from '../events/SelectedEventDragPreview';
+import PersonCardDragPreview from '../people/PeopleList/PersonCard/PersonCardDragPreview';
+import SelectedEventDragPreview from '../events/SelectedEvents/SelectedEventDragPreview';
 
 const layerStyle = {
   position: 'fixed',

@@ -3,14 +3,16 @@ import { DropTarget } from 'react-dnd';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { addEventToPerson, peopleListSelector } from '../../ducks/people';
+import { addEventToPerson, peopleListSelector } from '../../../ducks/people';
 
 class EventCard extends Component {
   render() {
     const { connectDropTarget, hovered, canDrop, people } = this.props;
     const { title, when, where } = this.props.event;
 
-    const peopleElement = people && <p>{people.map(person => person.email).join(', ')}</p>;
+    const peopleElement = people && (
+      <PeopleElement>{people.map(person => person.email).join(', ')}</PeopleElement>
+    );
 
     return connectDropTarget(
       <div>
@@ -49,6 +51,11 @@ export default connect(
   }),
   { addEventToPerson },
 )(DropTarget(['person'], spec, collect)(EventCard));
+
+const PeopleElement = styled.p`
+  font-weight: bold;
+  font-size: 20px;
+`;
 
 const SCEventCard = styled.div.attrs({
   style: props => props.reactMotionStyle,

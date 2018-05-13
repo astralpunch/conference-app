@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import AddPersonForm from '../people/AddPersonForm';
 
 import { addPerson, moduleName } from '../../ducks/people';
-import VirtualizedPeopleList from '../people/VirtualizedPeopleList';
+import VirtualizedPeopleList from '../people/VirtualizedPeopleList/VirtualizedPeopleList';
 
 class People extends Component {
   render() {

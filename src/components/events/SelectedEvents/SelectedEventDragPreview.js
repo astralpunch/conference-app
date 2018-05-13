@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { eventSelector } from '../../ducks/events';
+import { eventSelector } from '../../../ducks/events';
 
 class SelectedEventDragPreview extends Component {
   render() {

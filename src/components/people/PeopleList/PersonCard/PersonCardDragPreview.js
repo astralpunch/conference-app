@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { personSelector } from '../../ducks/people';
+import { personSelector } from '../../../../ducks/people';
 
 class PersonCardDragPreview extends Component {
   render() {

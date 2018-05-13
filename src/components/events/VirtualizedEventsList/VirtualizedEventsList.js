@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Table, Column, InfiniteLoader } from 'react-virtualized';
 import styled from 'styled-components';
 
-import TableRow from '../events/TableRow';
+import TableRow from './TableRow';
 
 import {
   moduleName,
@@ -11,7 +11,7 @@ import {
   selectEvent,
   eventListSelector,
   selectionSelector,
-} from '../../ducks/events';
+} from '../../../ducks/events';
 
 import 'react-virtualized/styles.css';
 

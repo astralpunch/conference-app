@@ -4,7 +4,7 @@ import { Table, Column } from 'react-virtualized';
 import { TransitionMotion, spring } from 'react-motion';
 import styled from 'styled-components';
 
-import { moduleName, fetchAllPeople, peopleListSelector } from '../../ducks/people';
+import { moduleName, fetchAllPeople, peopleListSelector } from '../../../ducks/people';
 
 import 'react-virtualized/styles.css';
 

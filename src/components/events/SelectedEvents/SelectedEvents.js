@@ -5,7 +5,7 @@ import { Transition } from 'react-spring';
 
 import SelectedEventCard from './SelectedEventCard';
 
-import { selectedEventsSelector } from '../../ducks/events';
+import { selectedEventsSelector } from '../../../ducks/events';
 
 class SelectedEvents extends Component {
   render() {

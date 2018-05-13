@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import VirtualizedEventsList from '../events/VirtualizedEventsList';
-import SelectedEvents from '../events/SelectedEvents';
-import PeopleList from '../people/PeopleList';
+import VirtualizedEventsList from '../events/VirtualizedEventsList/VirtualizedEventsList';
+import SelectedEvents from '../events/SelectedEvents/SelectedEvents';
+import PeopleList from '../people/PeopleList/PeopleList';
 import EventsTrashBin from '../events/EventsTrashBin';
 
 class AdminPage extends Component {
@@ -47,5 +47,6 @@ const Wrapper = styled.div`
 
 const Row = styled.div`
   display: flex;
+  justify-content: center;
   margin-bottom: 50px;
 `;
